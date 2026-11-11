@@ -25,6 +25,7 @@
       <nav class="main-nav" aria-label="Main navigation">
         <a href="#services">Services</a>
         <a href="#about">About</a>
+        <a href="#work">Work</a>
         <a href="#contact">Contact</a>
       </nav>
       <a class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 header-contact" href="#contact">Let’s talk <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg></a>
@@ -122,6 +123,20 @@
       </div>
     </section>
 
+    <section class="work-section" id="work">
+      <div class="page-wrap">
+        <div class="section-heading">
+          <p class="eyebrow">My work</p>
+          <h2>Work I’m proud of.</h2>
+          <p class="section-intro">A selection of recent projects across social media, websites, and student material.</p>
+        </div>
+        <div class="work-tools" id="work-tools"></div>
+        <p class="work-note" id="work-note" hidden></p>
+        <div class="work-grid" id="work-grid"></div>
+        <noscript><p class="work-note">Please turn on JavaScript to see my projects.</p></noscript>
+      </div>
+    </section>
+
     <section class="contact-section" id="contact">
       <div class="contact-inner page-wrap">
         <div>
@@ -131,9 +146,7 @@
         </div>
         <div class="contact-actions">
           <a class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-10 px-8 contact-primary" href="https://www.instagram.com/digitalcreations.pk1/" target="_blank" rel="noreferrer"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg> Message on Instagram <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg></a>
-          <a class="contact-secondary" href="https://www.threads.net/@digitalcreations.pk1" target="_blank" rel="noreferrer"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path></svg> Message on Threads</a>
-          <a class="contact-secondary" href="https://www.facebook.com/profile.php?id=61595104494117" target="_blank" rel="noreferrer"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg> message on Facebook</a>
-
+          <a class="contact-secondary" href="https://www.threads.net/@digitalcreations.pk1" target="_blank" rel="noreferrer"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path></svg> Find Digital Creations on Threads</a>
         </div>
       </div>
     </section>
@@ -147,5 +160,283 @@
     </div>
   </footer>
 </div>
+<script src="work.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var CATEGORIES = ["Social media", "Portfolio websites", "Student services"];
+  var KEY_OWNER = "dc_owner";
+  var KEY_DRAFT = "dc_work_draft";
+  var ARROW = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>';
+
+  var published = Array.isArray(window.WORK) ? window.WORK : [];
+  var grid = document.getElementById("work-grid");
+  var tools = document.getElementById("work-tools");
+  var note = document.getElementById("work-note");
+  if (!grid) return;
+
+  function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function save(k, v) {
+    try { if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); return true; }
+    catch (e) { return false; }
+  }
+
+  // Owner mode: open the site once with #admin at the end of the address.
+  var justEnabled = false;
+  if (location.hash === "#admin") {
+    justEnabled = true;
+    save(KEY_OWNER, "1");
+    try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
+  }
+  window.addEventListener("hashchange", function () {
+    if (location.hash === "#admin") {
+      save(KEY_OWNER, "1");
+      try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
+      location.reload();
+    }
+  });
+  var owner = load(KEY_OWNER) === "1";
+
+  var draft = null;
+  if (owner) {
+    try { var raw = load(KEY_DRAFT); if (raw) draft = JSON.parse(raw); } catch (e) { draft = null; }
+    if (!Array.isArray(draft)) draft = null;
+    // Once the uploaded work.js matches the draft, the draft is no longer needed.
+    if (draft && JSON.stringify(draft) === JSON.stringify(published)) { draft = null; save(KEY_DRAFT, null); }
+  }
+  var items = (owner && draft) ? draft : published.slice();
+
+  function isDirty() { return owner && draft && JSON.stringify(draft) !== JSON.stringify(published); }
+
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+  function safeUrl(u) {
+    try { var x = new URL(u, location.href); return (x.protocol === "http:" || x.protocol === "https:") ? x.href : ""; }
+    catch (e) { return ""; }
+  }
+  function safeImg(s) {
+    return typeof s === "string" && (/^data:image\/(jpeg|png|webp|gif);base64,[A-Za-z0-9+\/=]+$/.test(s) || /^[\w\-.\/]+\.(jpe?g|png|webp|gif|avif)$/i.test(s));
+  }
+
+  /* ---------- viewer ---------- */
+  var viewer = el("dialog", "work-viewer");
+  viewer.setAttribute("aria-label", "Project image");
+  var viewerBar = el("div", "work-viewer-bar");
+  var viewerTitle = el("span");
+  var viewerClose = el("button", "work-btn outline", "Close");
+  viewerClose.type = "button";
+  viewerBar.appendChild(viewerTitle); viewerBar.appendChild(viewerClose);
+  var viewerImg = el("img");
+  viewer.appendChild(viewerBar); viewer.appendChild(viewerImg);
+  document.body.appendChild(viewer);
+  viewerClose.addEventListener("click", function () { viewer.close(); });
+  viewer.addEventListener("click", function (e) { if (e.target === viewer) viewer.close(); });
+  function openViewer(item) {
+    viewerTitle.textContent = item.title || "";
+    viewerImg.src = item.image; viewerImg.alt = item.title || "Project image";
+    if (viewer.showModal) viewer.showModal();
+  }
+
+  /* ---------- render ---------- */
+  function render() {
+    grid.innerHTML = "";
+    if (!items.length) {
+      var box = el("div", "work-empty");
+      box.appendChild(el("strong", null, owner ? "No work added yet" : "New work is on its way"));
+      box.appendChild(el("span", null, owner
+        ? "Press “Add work” to put your first project here."
+        : "Message me on Instagram to see recent projects."));
+      grid.style.display = "block";
+      grid.appendChild(box);
+    } else {
+      grid.style.display = "";
+      items.forEach(function (item, index) {
+        if (!safeImg(item.image)) return;
+        var card = el("article", "work-card");
+
+        var media = el("button", "work-media");
+        media.type = "button";
+        media.setAttribute("aria-label", "View larger: " + (item.title || "project"));
+        var img = el("img");
+        img.src = item.image; img.alt = item.title || "Project image"; img.loading = "lazy";
+        media.appendChild(img);
+        media.addEventListener("click", function () { openViewer(item); });
+        card.appendChild(media);
+
+        var body = el("div", "work-body");
+        if (item.category) body.appendChild(el("p", "eyebrow", item.category));
+        body.appendChild(el("h3", null, item.title || "Untitled project"));
+        if (item.description) body.appendChild(el("p", "work-desc", item.description));
+
+        var actions = el("div", "work-actions");
+        var href = item.link ? safeUrl(item.link) : "";
+        if (href) {
+          var a = el("a", "text-link");
+          a.href = href; a.target = "_blank"; a.rel = "noreferrer noopener";
+          a.appendChild(document.createTextNode("View project "));
+          a.insertAdjacentHTML("beforeend", ARROW);
+          actions.appendChild(a);
+        } else {
+          actions.appendChild(el("span"));
+        }
+        if (owner) {
+          var rm = el("button", "work-remove", "Remove");
+          rm.type = "button";
+          rm.addEventListener("click", function () {
+            if (!confirm("Remove “" + (item.title || "this project") + "” from the list?")) return;
+            items.splice(index, 1);
+            persist();
+          });
+          actions.appendChild(rm);
+        }
+        body.appendChild(actions);
+        card.appendChild(body);
+        grid.appendChild(card);
+      });
+    }
+    renderTools();
+  }
+
+  function persist() {
+    draft = items.slice();
+    if (!save(KEY_DRAFT, JSON.stringify(draft))) {
+      alert("Your browser has no space left to keep this draft. Download work.js now so nothing is lost.");
+    }
+    render();
+  }
+
+  /* ---------- owner tools ---------- */
+  var dialog = null;
+
+  function renderTools() {
+    tools.innerHTML = "";
+    if (!owner) { note.hidden = true; return; }
+
+    var add = el("button", "work-btn", "Add work");
+    add.type = "button";
+    add.addEventListener("click", openDialog);
+
+    var dl = el("button", "work-btn outline", "Download work.js");
+    dl.type = "button";
+    dl.addEventListener("click", download);
+
+    var discard = el("button", "work-btn outline", "Discard changes");
+    discard.type = "button";
+    discard.addEventListener("click", function () {
+      if (!confirm("Throw away the changes made in this browser and go back to the published list?")) return;
+      draft = null; save(KEY_DRAFT, null); items = published.slice(); render();
+    });
+
+    var exit = el("button", "work-remove", "Exit owner mode");
+    exit.type = "button";
+    exit.addEventListener("click", function () { save(KEY_OWNER, null); location.reload(); });
+
+    tools.appendChild(add); tools.appendChild(dl);
+    if (isDirty()) tools.appendChild(discard);
+    tools.appendChild(exit);
+
+    note.hidden = false;
+    note.textContent = "";
+    var strong = el("strong", null, isDirty() ? "Not published yet. " : "Owner mode. ");
+    note.appendChild(strong);
+    note.appendChild(document.createTextNode(isDirty()
+      ? "Press “Download work.js”, then upload that file to your GitHub repository to show these changes to everyone."
+      : "Only you can see these buttons. Add a project, then download work.js and upload it to GitHub."));
+  }
+
+  function download() {
+    var text = "window.WORK = " + JSON.stringify(items, null, 2) + ";\n";
+    var blob = new Blob([text], { type: "text/javascript" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url; a.download = "work.js";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
+  }
+
+  function resizeImage(file, done, fail) {
+    var reader = new FileReader();
+    reader.onerror = function () { fail("Could not read that file."); };
+    reader.onload = function () {
+      var img = new Image();
+      img.onerror = function () { fail("That file is not a picture the browser can open."); };
+      img.onload = function () {
+        var max = 1200, w = img.naturalWidth, h = img.naturalHeight;
+        var scale = Math.min(1, max / Math.max(w, h));
+        var c = document.createElement("canvas");
+        c.width = Math.max(1, Math.round(w * scale)); c.height = Math.max(1, Math.round(h * scale));
+        var ctx = c.getContext("2d");
+        ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, c.width, c.height);
+        ctx.drawImage(img, 0, 0, c.width, c.height);
+        done(c.toDataURL("image/jpeg", 0.82));
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function openDialog() {
+    if (!dialog) {
+      dialog = el("dialog", "work-dialog");
+      dialog.setAttribute("aria-labelledby", "work-dialog-title");
+      dialog.innerHTML =
+        '<form method="dialog" id="work-form" novalidate>' +
+        '<h3 id="work-dialog-title">Add work</h3>' +
+        '<label class="work-field"><span>Picture</span><input type="file" name="image" accept="image/*" required></label>' +
+        '<label class="work-field"><span>Title</span><input type="text" name="title" maxlength="80" required></label>' +
+        '<label class="work-field"><span>Category</span><select name="category"></select></label>' +
+        '<label class="work-field"><span>Short description <small>(optional)</small></span><textarea name="description" maxlength="220"></textarea></label>' +
+        '<label class="work-field"><span>Link <small>(optional, for example an Instagram post or a live website)</small></span><input type="url" name="link" placeholder="https://"></label>' +
+        '<p class="work-error" id="work-error" role="alert"></p>' +
+        '<div class="work-dialog-actions"><button type="button" class="work-btn outline" id="work-cancel">Cancel</button><button type="submit" class="work-btn" id="work-save">Add to my work</button></div>' +
+        '</form>';
+      document.body.appendChild(dialog);
+      var sel = dialog.querySelector("select");
+      CATEGORIES.forEach(function (c) { var o = el("option", null, c); o.value = c; sel.appendChild(o); });
+      dialog.querySelector("#work-cancel").addEventListener("click", function () { dialog.close(); });
+      dialog.querySelector("form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        var f = e.target, err = dialog.querySelector("#work-error"), btn = dialog.querySelector("#work-save");
+        err.textContent = "";
+        var file = f.image.files && f.image.files[0];
+        var title = f.title.value.trim();
+        var link = f.link.value.trim();
+        if (!file) { err.textContent = "Please choose a picture."; return; }
+        if (!title) { err.textContent = "Please add a title."; return; }
+        if (link && !safeUrl(link)) { err.textContent = "The link must start with https://"; return; }
+        btn.disabled = true; btn.textContent = "Adding…";
+        resizeImage(file, function (dataUrl) {
+          items.unshift({
+            title: title,
+            category: f.category.value,
+            description: f.description.value.trim(),
+            link: link ? safeUrl(link) : "",
+            image: dataUrl
+          });
+          persist();
+          f.reset(); btn.disabled = false; btn.textContent = "Add to my work";
+          dialog.close();
+        }, function (msg) {
+          err.textContent = msg; btn.disabled = false; btn.textContent = "Add to my work";
+        });
+      });
+    }
+    dialog.querySelector("#work-error").textContent = "";
+    dialog.showModal();
+  }
+
+  render();
+
+  if (justEnabled) {
+    var w = document.getElementById("work");
+    if (w) w.scrollIntoView();
+  }
+})();
+</script>
 </body>
 </html>

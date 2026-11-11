@@ -1067,3 +1067,302 @@
     }
   }
 }
+
+/* ---------- Selected work ---------- */
+.work-section {
+  padding: 96px 0 104px;
+  border-top: 1px solid var(--border);
+  background: var(--muted);
+}
+
+.work-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 14px;
+}
+
+.work-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 20px;
+  border: 1px solid var(--primary);
+  border-radius: var(--radius-md);
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 650;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+.work-btn:hover {
+  background: color-mix(in oklab, var(--primary) 90%, transparent);
+}
+
+.work-btn.outline {
+  border-color: var(--border);
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.work-btn.outline:hover {
+  border-color: var(--primary);
+  background: var(--background);
+}
+
+.work-btn:focus-visible,
+.work-media:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.work-note {
+  margin: 0 0 28px;
+  color: var(--muted-foreground);
+  font-size: 0.88rem;
+}
+
+.work-note strong {
+  color: var(--foreground);
+}
+
+.work-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+}
+
+.work-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--background);
+}
+
+.work-media {
+  display: block;
+  width: 100%;
+  padding: 0;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  background: var(--muted);
+  cursor: zoom-in;
+}
+
+.work-media img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.work-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px 22px 22px;
+}
+
+.work-body h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 750;
+  line-height: 1.3;
+}
+
+.work-body p.work-desc {
+  margin: 0;
+  color: var(--muted-foreground);
+  font-size: 0.95rem;
+}
+
+.work-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+.work-actions .text-link svg {
+  width: 17px;
+  height: 17px;
+}
+
+.work-remove {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--muted-foreground);
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.work-remove:hover {
+  color: oklch(0.577 0.245 27.325);
+}
+
+.work-empty {
+  padding: 56px 24px;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--background);
+  color: var(--muted-foreground);
+  text-align: center;
+}
+
+.work-empty strong {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--foreground);
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+}
+
+.work-dialog {
+  width: min(520px, calc(100% - 32px));
+  max-height: calc(100% - 32px);
+  margin: auto;
+  padding: 28px;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.work-dialog::backdrop {
+  background: oklch(0.2 0.03 256 / 58%);
+}
+
+.work-dialog h3 {
+  margin: 0 0 18px;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 800;
+}
+
+.work-field {
+  display: block;
+  margin-bottom: 14px;
+}
+
+.work-field > span {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.86rem;
+  font-weight: 650;
+}
+
+.work-field small {
+  color: var(--muted-foreground);
+  font-weight: 500;
+}
+
+.work-field input,
+.work-field select,
+.work-field textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-md);
+  background: var(--background);
+  color: var(--foreground);
+  font: inherit;
+  font-size: 0.95rem;
+}
+
+.work-field textarea {
+  min-height: 84px;
+  resize: vertical;
+}
+
+.work-field input:focus-visible,
+.work-field select:focus-visible,
+.work-field textarea:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 1px;
+}
+
+.work-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.work-error {
+  min-height: 1.2em;
+  margin: 4px 0 0;
+  color: oklch(0.577 0.245 27.325);
+  font-size: 0.86rem;
+}
+
+.work-viewer {
+  width: min(960px, calc(100% - 32px));
+  max-height: calc(100% - 32px);
+  margin: auto;
+  padding: 0;
+  overflow: auto;
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.work-viewer::backdrop {
+  background: oklch(0.2 0.03 256 / 70%);
+}
+
+.work-viewer img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.work-viewer-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px;
+  font-weight: 650;
+}
+
+@media (max-width: 900px) {
+  .work-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+  }
+}
+
+@media (max-width: 680px) {
+  .work-section {
+    padding: 66px 0 72px;
+  }
+
+  .work-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .work-dialog {
+    padding: 22px;
+  }
+}
